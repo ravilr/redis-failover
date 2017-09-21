@@ -1,19 +1,17 @@
-package: github.com/siddontang/redis-failover
+package: github.com/ravilr/redis-failover
 import:
 - package: github.com/BurntSushi/toml
   version: v0.2.0
 - package: github.com/garyburd/redigo
-  version: v1.0.0
+  version: v1.1.0
   subpackages:
   - redis
-- package: github.com/go-cloud/go-zookeeper
-  subpackages:
-  - zk
-- package: github.com/go-cloud/zkhelper
 - package: github.com/gorilla/mux
-  version: v1.1
+  version: v1.5.0
 - package: github.com/hashicorp/raft
+  version: 3b4d64b29e422f04808b905005eb5a38bf9150e8
 - package: github.com/hashicorp/raft-boltdb
+  version: a8adffd05b79e3d8b1817d46bbe387a112265b3e
 - package: github.com/siddontang/go
   subpackages:
   - log

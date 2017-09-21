@@ -1,44 +1,44 @@
-hash: fea098d3675a5f3d59145e1f52be08720cac45abdb193f2ae06d6b933b487f3e
-updated: 2016-09-27T21:12:56.647392839+08:00
+hash: a2287b5f51f51637d8ac4c8008f130547a790ca6ccdae9f55ef5400beac6a004
+updated: 2017-09-15T18:00:21.758306891-07:00
 imports:
 - name: github.com/armon/go-metrics
-  version: 3df31a1ada83e310c2e24b267c8e8b68836547b4
+  version: 0a12dc6f6b9da6da644031a1b9b5a85478c5ee27
 - name: github.com/boltdb/bolt
-  version: fff57c100f4dea1905678da7e90d92429dff2904
+  version: fa5367d20c994db73282594be0146ab221657943
 - name: github.com/BurntSushi/toml
   version: bbd5bb678321a0d6e58f1099321dfa73391c1b6f
 - name: github.com/garyburd/redigo
-  version: 8873b2f1995f59d4bcdd2b0dc9858e2cb9bf0c13
+  version: 433969511232c397de61b1442f9fd49ec06ae9ba
   subpackages:
   - internal
   - redis
-- name: github.com/go-cloud/go-zookeeper
-  version: a75bd3e768869ad1a35a6c0dea7fa9aac41b76aa
-  subpackages:
-  - zk
-- name: github.com/go-cloud/zkhelper
-  version: c0db2971045e0f19dce1b041948fb4867a938b09
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: 0eeaf8392f5b04950925b8a69fe70f110fa7cbfc
+  version: 24fca303ac6da784b9e8269f724ddeb0b2eea5e7
+- name: github.com/hashicorp/go-immutable-radix
+  version: 8aac2701530899b64bdea735a1de8da899815220
 - name: github.com/hashicorp/go-msgpack
   version: fa3f63826f7c23912c15263591e65d54d080b458
   subpackages:
   - codec
+- name: github.com/hashicorp/golang-lru
+  version: 0a025b7e63adc15a622f29b0b2c4c3848243bbf6
+  subpackages:
+  - simplelru
 - name: github.com/hashicorp/raft
-  version: 5f09c4ffdbcd2a53768e78c47717415de12b6728
+  version: 3b4d64b29e422f04808b905005eb5a38bf9150e8
 - name: github.com/hashicorp/raft-boltdb
   version: a8adffd05b79e3d8b1817d46bbe387a112265b3e
 - name: github.com/siddontang/go
-  version: a30862d58df2fab27e2463adc1648ab092f8f8a0
+  version: cb568a3e5cc06256f91a2da5a87455f717eb33f4
   subpackages:
   - log
   - sync2
 - name: golang.org/x/sys
-  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
+  version: 062cd7e4e68206d8bab9b18396626e855c992658
   subpackages:
   - unix
 testImports:
 - name: gopkg.in/check.v1
-  version: 4f90aeace3a26ad7021961c297b22c42160c7b25
+  version: 20d25e2804050c1cd24a7eea1e7a6447dd0e74ec

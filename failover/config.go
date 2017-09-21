@@ -23,11 +23,6 @@ type RaftConfig struct {
 	ClusterState string   `toml:"cluster_state"`
 }
 
-type ZkConfig struct {
-	Addr    []string `toml:"addr"`
-	BaseDir string   `toml:"base_dir"`
-}
-
 type Config struct {
 	Addr          string   `toml:"addr"`
 	Masters       []string `toml:"masters"`
@@ -37,7 +32,6 @@ type Config struct {
 
 	Broker string     `toml:"broker"`
 	Raft   RaftConfig `toml:"raft"`
-	Zk     ZkConfig   `toml:"zk"`
 }
 
 func NewConfigWithFile(name string) (*Config, error) {

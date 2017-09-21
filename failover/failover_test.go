@@ -2,7 +2,6 @@ package failover
 
 import (
 	"bytes"
-	"flag"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	. "gopkg.in/check.v1"
@@ -13,8 +12,6 @@ import (
 	"testing"
 	"time"
 )
-
-var zkAddr = flag.String("zk", "", "zookeeper address, seperated by comma")
 
 func Test(t *testing.T) {
 	TestingT(t)
@@ -62,7 +59,7 @@ func (r *redisChecker) Write(data []byte) (int, error) {
 	defer r.Unlock()
 
 	r.buf.Write(data)
-	if strings.Contains(r.buf.String(), "The server is now ready to accept connections") {
+	if strings.Contains(r.buf.String(), "Configuration loaded") {
 		r.ok = true
 	}
 
@@ -154,7 +151,7 @@ func (s *failoverTestSuite) TestFailoverCheck(c *C) {
 
 	cfg.Masters = []string{masterAddr}
 	cfg.CheckInterval = 500
-	cfg.MaxDownTime = 1
+	cfg.MaxDownTime = 3
 
 	app, err := NewApp(cfg)
 	c.Assert(err, IsNil)
@@ -173,8 +170,8 @@ func (s *failoverTestSuite) TestFailoverCheck(c *C) {
 
 	select {
 	case <-ch:
-	case <-time.After(5 * time.Second):
-		c.Fatal("failover is not ok after 5s, too slow")
+	case <-time.After(10 * time.Second):
+		c.Fatal("failover is not ok after 10s, too slow")
 	}
 }
 
@@ -291,14 +288,6 @@ func (s *failoverTestSuite) testMultiClusterFailoverCheck(c *C, broker string) {
 	}
 }
 
-func (s *failoverTestSuite) TestOneZkFailoverCheck(c *C) {
-	s.testOneClusterFailoverCheck(c, "zk")
-}
-
-func (s *failoverTestSuite) TestMultiZkFailoverCheck(c *C) {
-	s.testMultiClusterFailoverCheck(c, "zk")
-}
-
 func (s *failoverTestSuite) addBeforeHandler(app *App) chan string {
 	ch := make(chan string, 1)
 	f := func(downMaster string) error {
@@ -347,14 +336,6 @@ func (s *failoverTestSuite) newClusterApp(c *C, num int, base int, broker string
 		cfg.Raft.ClusterState = ClusterStateExisting
 		cfg.Raft.Cluster = cluster
 
-		if *zkAddr == "" {
-			cfg.Zk.Addr = []string{"memory"}
-		} else {
-			cfg.Zk.Addr = strings.Split(*zkAddr, ",")
-		}
-
-		cfg.Zk.BaseDir = "/zk/redis/failover"
-
 		app, err := NewApp(cfg)
 
 		c.Assert(err, IsNil)
@@ -397,7 +378,7 @@ func (s *failoverTestSuite) waitReplConnected(c *C, port int, timeout int) {
 		tp, _ := redis.String(v[0], nil)
 		if tp == SlaveType {
 			state, _ := redis.String(v[3], nil)
-			if state == ConnectedState || state == SyncState {
+			if state == ConnectedState {
 				return
 			}
 		}

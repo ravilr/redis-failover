@@ -190,7 +190,7 @@ func (g *Group) doRole() error {
 	}
 
 	// we don't care slave add or remove too much, so only log
-	for addr, _ := range nodes {
+	for addr := range nodes {
 		if _, ok := g.Slaves[addr]; !ok {
 			log.Infof("slave %s added", addr)
 		}
@@ -220,8 +220,8 @@ func (g *Group) Elect() (string, error) {
 	defer g.m.Unlock()
 
 	var addr string
-	var checkOffset int64 = 0
-	var checkPriority int = 0
+	var checkOffset int64 = -1
+	var checkPriority int = 100
 
 	for _, slave := range g.Slaves {
 		m, err := slave.doRelpInfo()
@@ -243,13 +243,15 @@ func (g *Group) Elect() (string, error) {
 
 		priority, _ := strconv.Atoi(m["slave_priority"])
 		replOffset, _ := strconv.ParseInt(m["slave_repl_offset"], 10, 64)
+		log.Infof("slave %s : priority= %d, replOffset= %d", slave.Addr, priority, replOffset)
 
 		used := false
-		// like redis-sentinel, first check priority, then salve repl offset
-		if checkPriority < priority {
+
+		// like redis-sentinel, first check priority, then slave repl offset
+		if priority < checkPriority {
 			used = true
 		} else if checkPriority == priority {
-			if checkOffset < replOffset {
+			if replOffset > checkOffset {
 				used = true
 			}
 		}

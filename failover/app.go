@@ -66,8 +66,6 @@ func NewApp(c *Config) (*App, error) {
 	switch c.Broker {
 	case "raft":
 		a.cluster, err = newRaft(c, a.masters)
-	case "zk":
-		a.cluster, err = newZk(c, a.masters)
 	default:
 		log.Infof("unsupported broker %s, use no cluster", c.Broker)
 		a.cluster = nil
@@ -103,7 +101,7 @@ func (a *App) Close() {
 
 func (a *App) Run() {
 	if a.cluster != nil {
-		// wait 5s to determind whether leader or not
+		// wait 5s to determine whether leader or not
 		select {
 		case <-a.cluster.LeaderCh():
 		case <-time.After(5 * time.Second):
@@ -219,7 +217,7 @@ func (a *App) checkMaster(wg *sync.WaitGroup, g *Group) {
 
 	log.Errorf("master is down, elect %s as new master, do failover", newMaster)
 
-	// promote the candiate to master
+	// promote the candidate to master
 	err = g.Promote(newMaster)
 
 	if err != nil {
@@ -255,6 +253,7 @@ func (a *App) addMasters(addrs []string) error {
 
 	if a.cluster != nil {
 		if a.cluster.IsLeader() {
+			log.Infof("New redis masters to monitor: %v", addrs)
 			return a.cluster.AddMasters(addrs, 10*time.Second)
 		} else {
 			log.Infof("%s is not leader, skip", a.c.Addr)
